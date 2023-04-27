@@ -15,7 +15,7 @@ Dts ends
 Cds segment para 'Code'
 Assume DS:Dts, SS:Stk, CS:Cds
 
-
+;TODO: Размещать строки как в 9:9(типо вторая строка всегда с 10ого символа)
 read proc near
  mov AH,01h ;АН=07h ввести символ без эха
  INT 21h ;вызов функции DOS
@@ -34,12 +34,25 @@ read proc near
  mov CX,AX
  call endl
  call endl
- ;CX здесь верный при 4x4(0010)
  l:  mov AH,01h ;АН=07h ввести символ без эха
 	 INT 21h ;вызов функции DOS
 	 mov BX,CX
-	 mov x[BX - 1],AL
-	 sub x[BX - 1],"0"
+	 dec BX
+	 push AX
+	 mov AX,BX
+	 div columns
+	 push AX
+	 xor AH,AH
+	 xor BX,BX
+	 mov BL,9d
+	 mul BL
+	 mov BX,AX
+	 pop AX
+	 mov AL,AH
+	 xor AH,AH
+	 add BX,AX
+	 pop AX
+	 mov x[BX],AL
 	 xor AX,AX
 	 mov AH,02h
 	 mov DL," "
@@ -62,9 +75,23 @@ print proc near
  mul columns
  mov CX,AX
  l:  mov AH,02h ;АН=02h вывод символа
- 	 mov BX,CX
-     mov DL,x[BX - 1]
-	 add DL,"0"
+	 mov BX,CX
+	 dec BX
+	 push AX
+	 mov AX,BX
+	 div columns
+	 push AX
+	 xor AH,AH
+	 xor BX,BX
+	 mov BL,9d
+	 mul BL
+	 mov BX,AX
+	 pop AX
+	 mov AL,AH
+	 xor AH,AH
+	 add BX,AX
+	 pop AX
+     mov DL,x[BX]
 	 INT 21h ;вызов функции DOS	
 	 mov DL," "
 	 int 21h
@@ -99,34 +126,53 @@ change_matr proc near
  mov CX,AX
 	l:
 	 mov BX,CX
-	 XOR AX,AX
-	 mov AL,x[BX - 1]
+	 dec BX
+	 mov AX,BX
+	 div columns
 	 push AX
+	 xor AH,AH
+	 xor BX,BX
+	 mov BL,9d
+	 mul BL
+	 mov BX,AX
+	 pop AX
+	 mov AL,AH
+	 xor AH,AH
+	 add BX,AX
+	 XOR AX,AX
+	 mov AL,x[BX]
+	 push AX
+	 
 	 mov AX,CX
 	 dec AX
 	 xor DX,DX
-	 mov DL, columns
-	 div DL
+	 div columns
 	 mov DL, AH
 	 mov AL, columns
 	 sub AL, DL
 	 dec AL
 	 xor AH,AH
-	 XOR DX,DX
-	 mov DL, rows
-	 mul DX
+	 mul rows
 	 push AX
 	 mov AX, CX
 	 dec AX
-	 xor DX,DX
-	 mov DL, columns
-	 div DL
+	 div columns
 	 xor DX,DX
 	 mov DL, AL
 	 pop AX
 	 add AX, DX
+	 
+	 div columns
+	 push AX
+	 xor AH,AH
 	 xor BX,BX
-	 mov BX, AX
+	 mov BL,9d
+	 mul BL
+	 mov BX,AX
+	 pop AX
+	 mov AL,AH
+	 xor AH,AH
+	 add BX,AX
 	 pop AX
 	 mov temp[BX],AL
 	 loop l
@@ -140,8 +186,22 @@ change_matr proc near
  mov CX,AX
  	 copy:
 	 mov BX,CX
-	 mov AL, temp[BX - 1]
-	 mov x[BX - 1], AL
+	 dec BX
+	 mov AX,BX
+	 div columns
+	 push AX
+	 xor AH,AH
+	 xor BX,BX
+	 mov BL,9d
+	 mul BL
+	 mov BX,AX
+	 pop AX
+	 mov AL,AH
+	 xor AH,AH
+	 add BX,AX
+	 XOR AX,AX
+	 mov AL, temp[BX]
+	 mov x[BX], AL
 	 loop copy
  ret
  
