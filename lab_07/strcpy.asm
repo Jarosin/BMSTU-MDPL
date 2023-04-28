@@ -7,14 +7,7 @@ copy:
     mov RCX, RDX
 
     cmp RSI, RDI
-    jg std_copy
-
-
-    mov RAX, RDI
-    sub RAX, RSI
-
-    cmp RAX, RCX
-    jg std_copy
+    jge std_copy
 
     add RDI, RCX
     add RSI, RCX
@@ -25,5 +18,5 @@ copy:
     std
 std_copy:
     rep movsb
-
+    cld
     ret
