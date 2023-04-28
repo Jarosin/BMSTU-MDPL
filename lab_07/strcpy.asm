@@ -1,4 +1,4 @@
-яglobal copy
+global copy
 
 section .data
 section .text

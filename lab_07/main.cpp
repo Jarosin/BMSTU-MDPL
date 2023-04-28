@@ -9,9 +9,7 @@ void copy(char *dest, char *src, int len);
 size_t asmstrlen(const char *str)
 {
     size_t len;
-
-    __asm__ (".intel_syntax noprefix\n"
-             "mov RDI, %1\n"
+    __asm__( "mov RDI, %1\n"
              "mov RCX, -1\n"
              "xor AL, AL\n"
              "REPNZ SCASB\n"
