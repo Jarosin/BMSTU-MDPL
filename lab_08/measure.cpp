@@ -38,27 +38,26 @@ void measure_sin()
     sin_measure(pi_2);
 
     asm("fldpi\n"
-        "fsin\n"
         "fstps %0\n"
             : "=m"(result)
             );
-    cout <<" fldpi: " << result << endl;
+    sin_measure(result);
     cout << endl;
 
     cout << "sin(pi/2)" << endl;
     sin_measure(pi_1 / 2.0);
     sin_measure(pi_2 / 2.0);
 
-    asm("fldpi\n"
-        "flds %1\n"
+    a = 2.0;
+    asm("flds %1\n"
+        "fldpi\n"
         "fdivp\n"
-        "fsin\n"
         "fstps %0\n"
             : "=m"(result)
             : "m"(a)
             );
-    cout <<" fldpi / 2: " << result << endl;
-
+    sin_measure(result);
+    cout << endl;
 }
 
 long measure_float_funk(float a, float b, float_funk f)
