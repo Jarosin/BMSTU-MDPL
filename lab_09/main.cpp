@@ -9,6 +9,7 @@ float scalar_mult_cpp(float *vec1, float *vec2, int n)
 {
     float res = 0;
     for (int i = 0; i < n / 4; i++) res += vec1[i] * vec2[i];
+    return res;
 }
 
 float scalar_mult_asm(float *vec1, float *vec2, int n)
